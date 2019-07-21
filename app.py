@@ -29,7 +29,7 @@ def job(job_id):
 @app.route('/api/path/<path:path>')
 def path(path):
     print(f"path: {path}")
-    return str(type(path))
+    return (str(type(path)), 200)
 
 if __name__ == '__main__':
     app.run()
