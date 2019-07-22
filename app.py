@@ -1,5 +1,10 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, g, request, request_finished
 from werkzeug.routing import BaseConverter, ValidationError
+
+from flask.signals import signals_available
+
+if not signals_available:
+    raise RuntimeError("pip install blinker")
 
 _USERS = {'1': 'Tarek', '2': 'Freya'}
 
@@ -13,7 +18,9 @@ class RegisteredUser(BaseConverter):
     def to_url(self, value):
         return _IDS[value]
 
-app = Flask(__name__)
+app = Flask("microservice-flask")
+app.config.from_object('config.prod_settings.Config')
+
 
 app.url_map.converters['registered'] = RegisteredUser
 
@@ -30,6 +37,26 @@ def job(job_id):
 def path(path):
     print(f"path: {path}")
     return (str(type(path)), 200)
+
+@app.route('/api/hello')
+def hello():
+    return jsonify({'Hello': g.user})
+
+@app.before_request
+def authenticate():
+    if request.authorization:
+        g.user = request.authorization['username']
+    else:
+        g.user = 'Anonymous'
+
+
+def finished(sender, response, **extra):
+    print(app)
+    print('About to send a Response')
+    print('sender:', sender)
+    print('response:', response)
+
+request_finished.connect(finished)
 
 if __name__ == '__main__':
     app.run()
