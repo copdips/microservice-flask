@@ -3,8 +3,11 @@ from werkzeug.routing import BaseConverter, ValidationError
 
 from flask.signals import signals_available
 
+from teams import teams
+
 if not signals_available:
     raise RuntimeError("pip install blinker")
+
 
 _USERS = {'1': 'Tarek', '2': 'Freya'}
 
@@ -21,8 +24,9 @@ class RegisteredUser(BaseConverter):
 app = Flask("microservice-flask")
 app.config.from_object('config.prod_settings.Config')
 
-
 app.url_map.converters['registered'] = RegisteredUser
+
+app.register_blueprint(teams)
 
 @app.route('/api/person/<registered:name>')
 def person(name):
