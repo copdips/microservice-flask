@@ -5,3 +5,5 @@ pylint
 jedi
 black
 flask-webtest
+pytest-flake8
+tox
