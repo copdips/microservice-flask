@@ -1,7 +1,9 @@
-from flask import Flask, jsonify, g, request, request_finished
+from flask import Flask, jsonify, g, request, request_finished, abort
+from werkzeug.exceptions import HTTPException, default_exceptions
 from werkzeug.routing import BaseConverter, ValidationError
 
 from flask.signals import signals_available
+
 
 from teams import teams
 
@@ -21,7 +23,25 @@ class RegisteredUser(BaseConverter):
     def to_url(self, value):
         return _IDS[value]
 
-app = Flask("microservice-flask")
+
+def JsonApp(app):
+    def error_handling(error):
+        if isinstance(error, HTTPException):
+            result = {'code': error.code, 'description': error.description, 'message': str(error)}
+        else:
+            description = abort.mapping[500].description
+            result = {'code': 500, 'description': description, 'message': str(error)}
+        resp = jsonify(result)
+        resp.status_code = result['code']
+        return resp
+
+    for code in default_exceptions:
+        app.register_error_handler(code, error_handling)
+    return app
+
+app = JsonApp(Flask("microservice-flask"))
+# app = Flask("microservice-flask")
+
 app.config.from_object('config.prod_settings.Config')
 
 app.url_map.converters['registered'] = RegisteredUser
@@ -61,6 +81,14 @@ def finished(sender, response, **extra):
     print('response:', response)
 
 request_finished.connect(finished)
+
+@app.errorhandler(500)
+def error_handling(error):
+    return jsonify({'Error': str(error)}, 500)
+
+@app.route('/api')
+def my_microservice():
+    return jsonify({"Hello": "World"})
 
 if __name__ == '__main__':
     app.run()
