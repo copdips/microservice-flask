@@ -2,17 +2,14 @@ from pathlib import Path
 from setuptools import setup
 
 
-# current_folder = Path.cwd()
-# requirements_path = current_folder / "requirements/base.txt"
-# try:
-#     with requirements_path.open() as f:
-#         requires = [
-#             line.strip()
-#             for line in f.readlines()
-#             if line.strip() != "" and not line.strip().startswith("#")
-#         ]
-# except FileNotFoundError:
-#     pass
+current_folder = Path.cwd()
+requirements_path = current_folder / "requirements/base.txt"
+with requirements_path.open() as f:
+    requires = [
+        line.strip()
+        for line in f.readlines()
+        if line.strip() != "" and not line.strip().startswith("#")
+    ]
 
 setup(
     name="microservice-flask",
@@ -23,7 +20,9 @@ setup(
     author_email="xiang.zhu@outlook.com",
     license="MIT",
     packages=[],
-    install_requires=["flask", "blinker"],
-    # install_requires=requires,
+    # if we use explicitly package with install_requires=["flask", "blinker"],
+    # we can set `-e .` in requirements.txt
+    # install_requires=["flask", "blinker"],
+    install_requires=requires,
     zip_safe=False,
 )
