@@ -8,3 +8,4 @@ tox
 jedi
 black
 flask-webtest
+python-dotenv
