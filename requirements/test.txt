@@ -1,10 +1,10 @@
 -r base.txt
 pytest
 pytest-cov
+pytest-flake8
+pytest-black
 pylint
+tox
 jedi
 black
 flask-webtest
-pytest-flake8
-pytest-black
-tox
