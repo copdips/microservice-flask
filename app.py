@@ -1,16 +1,15 @@
 import time
 
-from flask import Flask, jsonify, g, request, request_finished, Response, abort
+from flask import Flask, Response, abort, g, jsonify, request, request_finished
+from flask.signals import signals_available
 from requests import Session
-from requests.exceptions import ReadTimeout, ConnectionError
 from requests.adapters import HTTPAdapter
+from requests.exceptions import ConnectionError, ReadTimeout
 from werkzeug.exceptions import HTTPException, default_exceptions
 from werkzeug.routing import BaseConverter, ValidationError
 
-from flask.signals import signals_available
-
+from config import prod_settings
 from teams import teams
-
 
 if not signals_available:
     raise RuntimeError("pip install blinker")
@@ -103,7 +102,8 @@ app = JsonApp(Flask("microservice-flask"))
 # app = Flask("microservice-flask")
 setup_connector(app)
 
-app.config.from_object("config.prod_settings.Config")
+app.config.from_object(prod_settings.Config)
+# app.config.from_object(Config)
 
 app.url_map.converters["registered"] = RegisteredUser
 
@@ -141,30 +141,32 @@ def path(path):
 def hello():
     return jsonify({"Hello": g.user})
 
-@app.route('/api/user/<user_id>', methods=['POST'])
+
+@app.route("/api/user/<user_id>", methods=["POST"])
 def change_user(user_id):
     user = request.json
     # setting a new timestamp
-    user['modified'] = _time2etag()
+    user["modified"] = _time2etag()
     _USERS[user_id] = user
     resp = jsonify(user)
-    resp.set_etag(user['modified'])
+    resp.set_etag(user["modified"])
     return resp
 
-@app.route('/api/user/<user_id>')
+
+@app.route("/api/user/<user_id>")
 def get_user(user_id):
     if user_id not in _USERS:
         return abort(404)
     user = _USERS[user_id]
 
     # returning 304 if If-None-Match matches
-    if user['modified'] in request.if_none_match:
+    if user["modified"] in request.if_none_match:
         return Response(status=304)
 
     resp = jsonify(user)
 
     # setting the ETag
-    resp.set_etag(user['modified'])
+    resp.set_etag(user["modified"])
     return resp
 
 
