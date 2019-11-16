@@ -18,7 +18,7 @@ class TestMyApp(unittest.TestCase):
 
     def test_help(self):
         hello = self.app.get("/api")
-        self.assertEqual(hello.json["Hello"], "World")
+        self.assertEqual(hello.json["Hello"], "World!")
 
 
 if __name__ == "__main__":
