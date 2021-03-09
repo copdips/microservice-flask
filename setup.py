@@ -14,7 +14,7 @@ with requirements_path.open() as f:
 setup(
     name="microservice-flask",
     version="0.1",
-    description="microservice-flask by learning from the book Python Microservices Development",
+    description="learning from the book Python Microservices Development",
     url="https://github.com/copdips/microservice-flask",
     author="Xiang ZHU",
     author_email="xiang.zhu@outlook.com",

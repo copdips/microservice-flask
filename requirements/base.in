@@ -1,0 +1,8 @@
+Flask
+blinker
+requests
+Werkzeug
+flask_webtest
+WebTest
+python-dotenv
+pip-tools
