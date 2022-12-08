@@ -8,9 +8,9 @@ beautifulsoup4==4.9.3
     # via webtest
 blinker==1.4
     # via
-    #   -r .\requirements\base.in
+    #   -r base.in
     #   flask-webtest
-certifi==2020.12.5
+certifi==2022.12.7
     # via requests
 chardet==4.0.0
     # via requests
@@ -18,12 +18,12 @@ click==7.1.2
     # via
     #   flask
     #   pip-tools
-flask-webtest==0.0.9
-    # via -r .\requirements\base.in
 flask==1.1.2
     # via
-    #   -r .\requirements\base.in
+    #   -r base.in
     #   flask-webtest
+flask-webtest==0.0.9
+    # via -r base.in
 idna==2.10
     # via requests
 itsdangerous==1.1.0
@@ -33,11 +33,11 @@ jinja2==2.11.3
 markupsafe==1.1.1
     # via jinja2
 pip-tools==5.5.0
-    # via -r .\requirements\base.in
+    # via -r base.in
 python-dotenv==0.15.0
-    # via -r .\requirements\base.in
+    # via -r base.in
 requests==2.25.1
-    # via -r .\requirements\base.in
+    # via -r base.in
 six==1.15.0
     # via webtest
 soupsieve==2.2
@@ -50,11 +50,11 @@ webob==1.8.7
     # via webtest
 webtest==2.0.35
     # via
-    #   -r .\requirements\base.in
+    #   -r base.in
     #   flask-webtest
 werkzeug==1.0.1
     # via
-    #   -r .\requirements\base.in
+    #   -r base.in
     #   flask
 
 # The following packages are considered to be unsafe in a requirements file:
